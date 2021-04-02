@@ -1,0 +1,977 @@
+import React, { Component } from "react";
+import "./adPackages.css";
+import axios from "axios";
+import api_link from "../../config.json";
+import AdminFooter from "./../adminLayout/adminFooter";
+
+class AdPackages extends Component {
+  state = {
+    packages: [],
+    show: false,
+    data: { type: "Basic" },
+    data1: { type: "Standard" },
+    data2: { type: "Premium" },
+    createButton: true,
+  };
+  componentDidMount = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const resp = await axios.get(
+        api_link.API_LINK + "admin/package/retrive",
+        { headers: { Authorization: token } }
+      );
+      this.setState({ packages: resp["data"]["packages"], show: true });
+      if (resp["data"]["packages"].length < 1) {
+        this.setState({ createButton: true });
+      } else {
+        this.setState({ createButton: false });
+      }
+      console.log(resp);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  handleChange = ({ currentTarget: input }) => {
+    const data = {
+      // duration: this.state.packages[0] && this.state.packages[0].duration,
+      // amount: this.state.packages[0] && this.state.packages[0].amount,
+      // clicks: this.state.packages[0] && this.state.packages[0].clicks,
+      // views: this.state.packages[0] && this.state.packages[0].views,
+      // description: this.state.packages[0] && this.state.packages[0].description,
+      // ads_per_package: parseInt(
+      //   this.state.packages[0] && this.state.packages[0].ads_per_package
+      ...this.state.data,
+      // ),
+    };
+    data[input.name] = input.value;
+    this.setState({ data });
+    console.log(this.state.data);
+  };
+  handleChange1 = ({ currentTarget: input }) => {
+    const data1 = {
+      // duration: this.state.packages[1] && this.state.packages[1].duration,
+      // amount: this.state.packages[1] && this.state.packages[1].amount,
+      // clicks: this.state.packages[1] && this.state.packages[1].clicks,
+      // views: this.state.packages[1] && this.state.packages[1].views,
+      // description: this.state.packages[1] && this.state.packages[1].description,
+      // ads_per_package: parseInt(
+      //   this.state.packages[1] && this.state.packages[1].ads_per_package
+      // ),
+      ...this.state.data1,
+    };
+    data1[input.name] = input.value;
+    this.setState({ data1 });
+    console.log(this.state.data1);
+  };
+  handleChange2 = ({ currentTarget: input }) => {
+    const data2 = {
+      // duration: this.state.packages[2] && this.state.packages[2].duration,
+      // amount: this.state.packages[2] && this.state.packages[2].amount,
+      // clicks: this.state.packages[2] && this.state.packages[2].clicks,
+      // views: this.state.packages[2] && this.state.packages[2].views,
+      // description: this.state.packages[2] && this.state.packages[2].description,
+      // ads_per_package: parseInt(
+      //   this.state.packages[2] && this.state.packages[2].ads_per_package
+      // ),
+      ...this.state.data2,
+    };
+    data2[input.name] = input.value;
+    this.setState({ data2 });
+    console.log(this.state.data2);
+  };
+  updatePackage1 = async (id) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.put(
+        api_link.API_LINK + "admin/package/update/" + id,
+        this.state.data,
+        { headers: { Authorization: token } }
+      );
+      // this.setState({ packages: resp["data"]["packages"], show: true });
+      if (response["data"]["status"] === 200) {
+        alert("Basic Package Updated");
+        const data = { ...this.state.packages };
+        data[0] = response["data"]["updated_package"];
+        this.setState({ packages: data });
+      }
+      console.log(response);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  updatePackage2 = async (id) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.put(
+        api_link.API_LINK + "admin/package/update/" + id,
+        this.state.data1,
+        { headers: { Authorization: token } }
+      );
+      // this.setState({ packages: resp["data"]["packages"], show: true });
+      if (response["data"]["status"] === 200) {
+        alert("Standard Package Updated");
+        const data = { ...this.state.packages };
+        data[1] = response["data"]["updated_package"];
+        this.setState({ packages: data });
+      }
+      console.log(response);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  updatePackage3 = async (id) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.put(
+        api_link.API_LINK + "admin/package/update/" + id,
+        this.state.data2,
+        { headers: { Authorization: token } }
+      );
+      // this.setState({ packages: resp["data"]["packages"], show: true });
+      if (response["data"]["status"] === 200) {
+        alert("Premium Package Updated");
+        const data = { ...this.state.packages };
+        data[2] = response["data"]["updated_package"];
+        this.setState({ packages: data });
+      }
+      console.log(response);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  createPackage = async (id) => {
+    const token = localStorage.getItem("token");
+    const data =
+      id === 0
+        ? { ...this.state.data }
+        : id === 1
+        ? { ...this.state.data1 }
+        : { ...this.state.data2 };
+    const response = await axios.post(
+      api_link.API_LINK + "admin/package/add",
+      data,
+      { headers: { Authorization: token } }
+    );
+    console.log(response);
+    if (response.status === 200) {
+      window.alert("Package Created");
+      window.location.reload();
+    }
+  };
+  render() {
+    return (
+      <React.Fragment>
+        <div id="content" class="main-content">
+          <div class="layout-px-spacing">
+            <div class="page-header">
+              <div class="page-title">
+                <h3>Edit Ad Packages Detail</h3>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-lg-10  ml-auto mr-auto layout-top-spacing">
+                <div class="statbox widget box">
+                  <div class="widget-content widget-content-area icon-pill">
+                    <h3 class="">
+                      <i class="fas fa-ad" style={{ color: "#5c1ac3" }}></i>{" "}
+                      Basic Package Details
+                    </h3>
+                    <form className="text-left">
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              className="required"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Package Days Duration
+                            </label>
+
+                            <input
+                              id="basic_days_duration"
+                              name="duration"
+                              type="number"
+                              required
+                              className="form-control"
+                              defaultValue={
+                                this.state.packages[0] &&
+                                this.state.packages[0].duration
+                              }
+                              onChange={this.handleChange}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              className="required"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Ad Views
+                            </label>
+
+                            <input
+                              id="basic_ad_views"
+                              name="views"
+                              required
+                              type="number"
+                              className="form-control"
+                              placeholder=""
+                              defaultValue={
+                                this.state.packages[0] &&
+                                this.state.packages[0].views
+                              }
+                              onChange={this.handleChange}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              className="required"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Ad Clicks
+                            </label>
+
+                            <input
+                              id="basic_ad_clicks"
+                              name="clicks"
+                              type="number"
+                              required
+                              defaultValue={
+                                this.state.packages[0] &&
+                                this.state.packages[0].clicks
+                              }
+                              className="form-control"
+                              placeholder=""
+                              onChange={this.handleChange}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              style={{ color: "black", fontWeight: "700" }}
+                              className="required"
+                            >
+                              Amount per Ad
+                            </label>
+
+                            <input
+                              id="basic_amount_per_ad"
+                              name="amount"
+                              required
+                              type="number"
+                              className="form-control"
+                              placeholder=""
+                              defaultValue={
+                                this.state.packages[0] &&
+                                this.state.packages[0].amount
+                              }
+                              onChange={this.handleChange}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              className="required"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Package Description in English
+                            </label>
+
+                            <textarea
+                              id="basic_description"
+                              name="description"
+                              type="text"
+                              row="3"
+                              required
+                              className="form-control"
+                              placeholder=""
+                              defaultValue={
+                                this.state.packages[0] &&
+                                this.state.packages[0].description
+                              }
+                              onChange={this.handleChange}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              className="required"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Package Description in Arabic
+                            </label>
+
+                            <textarea
+                              id="basic_description"
+                              name="arDescription"
+                              type="text"
+                              row="3"
+                              required
+                              className="form-control text-right"
+                              placeholder=""
+                              defaultValue={
+                                this.state.packages[0] &&
+                                this.state.packages[0].arDescription
+                              }
+                              onChange={this.handleChange}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Ads Per Package
+                            </label>
+                            <br></br>
+
+                            <input
+                              id="basic_ads_per_package"
+                              name="ads_per_package"
+                              required
+                              type="number"
+                              className="form-control"
+                              placeholder=""
+                              defaultValue={
+                                this.state.packages[0] &&
+                                this.state.packages[0].ads_per_package
+                              }
+                              onChange={this.handleChange}
+                            />
+                          </div>
+                        </div>
+                        <div
+                          className="col-md-6 m-auto"
+                          style={{ textAlign: "center" }}
+                        >
+                          {this.state.createButton ? (
+                            <button
+                              className="btn btn-lg btn-success"
+                              type="button"
+                              style={{ width: "300px" }}
+                              onClick={() => this.createPackage(0)}
+                              // disabled={
+                              //   JSON.stringify(this.state.data) === "{}"
+                              //     ? true
+                              //     : false
+                              // }
+                            >
+                              Create Package
+                            </button>
+                          ) : (
+                            <button
+                              className="btn btn-lg btn-success"
+                              type="button"
+                              style={{ width: "300px" }}
+                              onClick={() =>
+                                this.updatePackage1(
+                                  this.state.packages[0] &&
+                                    this.state.packages[0]._id
+                                )
+                              }
+                              disabled={
+                                JSON.stringify(this.state.data) === "{}"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              Confirm Update
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-lg-10  ml-auto mr-auto layout-top-spacing">
+                <div class="statbox widget box">
+                  <div class="widget-content widget-content-area icon-pill">
+                    <h3 class="">
+                      <i class="fas fa-ad" style={{ color: "#5c1ac3" }}></i>{" "}
+                      Standard Package Details
+                    </h3>
+                    <form className="text-left">
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              className="required"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Package Days Duration
+                            </label>
+
+                            <input
+                              id="basic_days_duration"
+                              name="duration"
+                              type="number"
+                              required
+                              className="form-control"
+                              defaultValue={
+                                this.state.packages[1] &&
+                                this.state.packages[1].duration
+                              }
+                              onChange={this.handleChange1}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              className="required"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Ad Views
+                            </label>
+
+                            <input
+                              id="basic_ad_views"
+                              name="views"
+                              required
+                              type="number"
+                              className="form-control"
+                              placeholder=""
+                              defaultValue={
+                                this.state.packages[1] &&
+                                this.state.packages[1].views
+                              }
+                              onChange={this.handleChange1}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              className="required"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Ad Clicks
+                            </label>
+
+                            <input
+                              id="basic_ad_clicks"
+                              name="clicks"
+                              type="number"
+                              required
+                              defaultValue={
+                                this.state.packages[1] &&
+                                this.state.packages[1].clicks
+                              }
+                              className="form-control"
+                              placeholder=""
+                              onChange={this.handleChange1}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              style={{ color: "black", fontWeight: "700" }}
+                              className="required"
+                            >
+                              Amount per Ad
+                            </label>
+
+                            <input
+                              id="basic_amount_per_ad"
+                              name="amount"
+                              required
+                              type="number"
+                              className="form-control"
+                              placeholder=""
+                              defaultValue={
+                                this.state.packages[1] &&
+                                this.state.packages[1].amount
+                              }
+                              onChange={this.handleChange1}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              className="required"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Package Description in English
+                            </label>
+
+                            <textarea
+                              id="basic_description"
+                              name="description"
+                              type="text"
+                              row="3"
+                              required
+                              className="form-control"
+                              placeholder=""
+                              defaultValue={
+                                this.state.packages[1] &&
+                                this.state.packages[1].description
+                              }
+                              onChange={this.handleChange1}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              className="required"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Package Description in Arabic
+                            </label>
+
+                            <textarea
+                              id="basic_description"
+                              name="arDescription"
+                              type="text"
+                              row="3"
+                              required
+                              className="form-control text-right"
+                              placeholder=""
+                              defaultValue={
+                                this.state.packages[1] &&
+                                this.state.packages[1].arDescription
+                              }
+                              onChange={this.handleChange1}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Ads Per Package
+                            </label>
+                            <br></br>
+
+                            <input
+                              id="standard_ads_per_package"
+                              name="ads_per_package"
+                              type="number"
+                              required
+                              defaultValue={
+                                this.state.packages[1] &&
+                                this.state.packages[1].ads_per_package
+                              }
+                              className="form-control"
+                              placeholder=""
+                              onChange={this.handleChange1}
+                            />
+                          </div>
+                        </div>
+                        <div
+                          className="col-md-6 "
+                          style={{ textAlign: "center" }}
+                        >
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              style={{ color: "white", fontWeight: "700" }}
+                            >
+                              Amount per Ad
+                            </label>
+                            <br></br>
+                            {this.state.createButton ? (
+                              <button
+                                className="btn btn-lg btn-success"
+                                type="button"
+                                style={{ width: "300px" }}
+                                onClick={() => this.createPackage(1)}
+                                // disabled={
+                                //   JSON.stringify(this.state.data) === "{}"
+                                //     ? true
+                                //     : false
+                                // }
+                              >
+                                Create Package
+                              </button>
+                            ) : (
+                              <button
+                                className="btn btn-lg btn-success"
+                                type="button"
+                                style={{ width: "300px" }}
+                                onClick={() =>
+                                  this.updatePackage2(
+                                    this.state.packages[1] &&
+                                      this.state.packages[1]._id
+                                  )
+                                }
+                                disabled={
+                                  JSON.stringify(this.state.data1) === "{}"
+                                    ? true
+                                    : false
+                                }
+                              >
+                                Confirm Update
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-lg-10  ml-auto mr-auto layout-top-spacing">
+                <div class="statbox widget box">
+                  <div class="widget-content widget-content-area icon-pill">
+                    <h3 class="">
+                      <i class="fas fa-ad" style={{ color: "#5c1ac3" }}></i>{" "}
+                      Premium Package Details
+                    </h3>
+                    <form className="text-left">
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              className="required"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Package Days Duration
+                            </label>
+
+                            <input
+                              id="basic_days_duration"
+                              name="duration"
+                              type="number"
+                              required
+                              className="form-control"
+                              defaultValue={
+                                this.state.packages[2] &&
+                                this.state.packages[2].duration
+                              }
+                              onChange={this.handleChange2}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              className="required"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Ad Views
+                            </label>
+
+                            <input
+                              id="basic_ad_views"
+                              name="views"
+                              required
+                              type="number"
+                              className="form-control"
+                              placeholder=""
+                              defaultValue={
+                                this.state.packages[2] &&
+                                this.state.packages[2].views
+                              }
+                              onChange={this.handleChange2}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              className="required"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Ad Clicks
+                            </label>
+
+                            <input
+                              id="basic_ad_clicks"
+                              name="clicks"
+                              type="number"
+                              required
+                              defaultValue={
+                                this.state.packages[2] &&
+                                this.state.packages[2].clicks
+                              }
+                              className="form-control"
+                              placeholder=""
+                              onChange={this.handleChange2}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              style={{ color: "black", fontWeight: "700" }}
+                              className="required"
+                            >
+                              Amount per Ad
+                            </label>
+
+                            <input
+                              id="basic_amount_per_ad"
+                              name="amount"
+                              required
+                              type="number"
+                              className="form-control"
+                              placeholder=""
+                              defaultValue={
+                                this.state.packages[2] &&
+                                this.state.packages[2].amount
+                              }
+                              onChange={this.handleChange2}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              className="required"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Package Description in English
+                            </label>
+
+                            <textarea
+                              id="basic_description"
+                              name="description"
+                              type="text"
+                              row="3"
+                              required
+                              className="form-control"
+                              placeholder=""
+                              defaultValue={
+                                this.state.packages[2] &&
+                                this.state.packages[2].description
+                              }
+                              onChange={this.handleChange2}
+                            />
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              className="required"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Package Description in Arabic
+                            </label>
+
+                            <textarea
+                              id="basic_description"
+                              name="arDescription"
+                              type="text"
+                              row="3"
+                              required
+                              className="form-control text-right"
+                              placeholder=""
+                              defaultValue={
+                                this.state.packages[2] &&
+                                this.state.packages[2].arDescription
+                              }
+                              onChange={this.handleChange2}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-md-6">
+                          <div
+                            id="username-field"
+                            className="field-wrapper input mt-3 mb-3"
+                          >
+                            <label
+                              htmlFor="username"
+                              style={{ color: "black", fontWeight: "700" }}
+                            >
+                              Ads Per Package
+                            </label>
+                            <br></br>
+
+                            <input
+                              id="premium_ads_per_package"
+                              name="ads_per_package"
+                              type="number"
+                              required
+                              defaultValue={
+                                this.state.packages[2] &&
+                                this.state.packages[2].ads_per_package
+                              }
+                              className="form-control"
+                              placeholder=""
+                              onChange={this.handleChange2}
+                            />
+                          </div>
+                        </div>
+                        <div
+                          className="col-md-6"
+                          style={{ textAlign: "center" }}
+                        >
+                          <div className="">
+                            <label className="text-white">button</label>
+                            <div
+                              id="username-field"
+                              className="field-wrapper input mt-3 mb-3"
+                            >
+                              {this.state.createButton ? (
+                                <button
+                                  className="btn btn-lg btn-success"
+                                  type="button"
+                                  style={{ width: "300px" }}
+                                  onClick={() => this.createPackage(2)}
+                                  // disabled={
+                                  //   JSON.stringify(this.state.data) === "{}"
+                                  //     ? true
+                                  //     : false
+                                  // }
+                                >
+                                  Create Package
+                                </button>
+                              ) : (
+                                <button
+                                  className="btn btn-lg btn-success"
+                                  type="button"
+                                  style={{ width: "300px" }}
+                                  onClick={() =>
+                                    this.updatePackage3(
+                                      this.state.packages[2] &&
+                                        this.state.packages[2]._id
+                                    )
+                                  }
+                                  disabled={
+                                    JSON.stringify(this.state.data2) === "{}"
+                                      ? true
+                                      : false
+                                  }
+                                >
+                                  Confirm Update
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <AdminFooter />
+        </div>
+      </React.Fragment>
+    );
+  }
+}
+
+export default AdPackages;

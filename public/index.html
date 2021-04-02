@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <base href="/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- <meta name="theme-color" content="#000000" /> -->
+  <!-- <meta name="description" content="Web site created using create-react-app" /> -->
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <!-- <link rel="icon" type="image/x-icon" href="%PUBLIC_URL%/assets/img/masoon-logo.svg" /> -->
+
+
+  <!--Font Awesome-->
+  <link href="%PUBLIC_URL%/assets/fontawesome/css/fontawesome.min.css" rel="stylesheet" />
+  <!-- <link href="%PUBLIC_URL%/assets/fontawesome/css/brands.min.css" rel="stylesheet" /> -->
+  <link href="%PUBLIC_URL%/assets/fontawesome/css/solid.min.css" rel="stylesheet" />
+  <!---->
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <link rel="icon" type="image/x-icon" href="/public/favicon.ico" />
+
+
+  <link href="%PUBLIC_URL%/assets/english-css/allcss.min.css" rel="stylesheet" type="text/css" />
+  <link href="%PUBLIC_URL%/assets/english-css/allcss2.min.css" rel="stylesheet" type="text/css" />
+
+  <!--English CSS Ends-->
+  <!-- BEGIN GLOBAL MANDATORY STYLES -->
+
+  <link href="%PUBLIC_URL%/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <!-- END GLOBAL MANDATORY STYLES -->
+  <link href="%PUBLIC_URL%/assets/css/main.css" rel="stylesheet" type="text/css" />
+  <!-- <link href="%PUBLIC_URL%/assets/css/plugins.css" rel="stylesheet" /> -->
+  <!-- <link href="%PUBLIC_URL%/assets/plugins/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" /> -->
+
+  <link href="https://fonts.googleapis.com/css?family=Quicksand:400,500,600,700&display=swap" rel="stylesheet" />
+
+
+  <title>Masoon</title>
+</head>
+
+<body>
+  <noscript>You Need To Enable Javascript To Run This Application </noscript>
+  <div id="root">
+  </div>
+
+
+  <script src="%PUBLIC_URL%/assets/js/libs/jquery-3.1.1.min.js"></script>
+  <script src="%PUBLIC_URL%/bootstrap/js/popper.min.js"></script>
+  <script src="%PUBLIC_URL%/bootstrap/js/bootstrap.min.js"></script>
+  <script src="%PUBLIC_URL%/assets/js/app.js"></script>
+  <script src="%PUBLIC_URL%/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+  <!-- <script src="%PUBLIC_URL%/assets/js/scrollspyNav.js"></script> -->
+  <!-- <script src="%PUBLIC_URL%/assets/js/custom.js"></script> -->
+  <!-- <script src="%PUBLIC_URL%/assets/js/loader.js"></script> -->
+  <!-- END GLOBAL MANDATORY SCRIPTS -->
+  <!-- <script src="%PUBLIC_URL%/assets/js/authentication/form-2.js"></script> -->
+  <!-- <script src="%PUBLIC_URL%/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script> -->
+
+  <script>
+    $(document).ready(function () {
+      App.init();
+    });
+  </script>
+  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+  <!-- <script src="%PUBLIC_URL%/assets/js/onesignal.js" async></script> -->
+  <script>
+    if (!localStorage.getItem("Role") || localStorage.getItem("Role") === "Publisher") {
+      window.OneSignal = window.OneSignal || [];
+      OneSignal.push(function () {
+        OneSignal.init({
+          appId: "3e4aeb4a-eb53-479c-bb47-187580c1b126",
+          notifyButton: {
+            enable: true,
+          },
+          subdomainName: "masoon",
+        });
+      });
+    }
+    // console.log("playerID", window.OneSignal.getUserId())
+  </script>
+  <!-- END GLOBAL MANDATORY SCRIPTS -->
+  <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM SCRIPTS -->
+
+  <!-- <script src="%PUBLIC_URL%/assets/js/widgets/modules-widgets.js"></script> -->
+
+  <!-- <script src="%PUBLIC_URL%/assets/js/apps/notes.js"></script> -->
+
+
+
+  <!-- <script src="%PUBLIC_URL%/assets/js/apps/todoList.js"></script> -->
+  <!-- <script src="%PUBLIC_URL%/assets/js/components/ui-accordions.js"></script> -->
+  <!-- END GLOBAL MANDATORY STYLES -->
+  <!-- <script src="%PUBLIC_URL%/assets/js/apps/mailbox-chat.js"></script> -->
+
+</body>
+
+</html>

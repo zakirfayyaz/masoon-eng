@@ -1,0 +1,319 @@
+import React, { Component } from "react";
+import "./pricing.css";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import api_link from "../../config.json";
+import { trackPromise } from "react-promise-tracker";
+// import { usePromiseTracker } from "react-promise-tracker";
+// import Loader from "react-promise-loader";
+import { ToastContainer, toast } from "react-toastify";
+//import { trackPromise } from "react-promise-tracker";
+class PricingPlans extends Component {
+  state = { packages: [], show: false, account: [1] };
+  async componentDidMount() {
+    const token = localStorage.getItem("token");
+
+    const response = await trackPromise(
+      axios.get(api_link.API_LINK + "admin/package/retrive", {
+        headers: { Authorization: token },
+      })
+    );
+    console.log(response);
+
+    const resp2 = await axios.get(api_link.API_LINK + "admin/package/retrive", {
+      headers: { Authorization: token },
+    });
+    console.log(resp2);
+    this.setState({
+      basic: response["data"]["packages"][0],
+      standard: response["data"]["packages"][1],
+      premium: response["data"]["packages"][2],
+      packages: resp2["data"]["packages"],
+    });
+    await this.setState({ show: true });
+  }
+  assignPackage = async () => {
+    const token = localStorage.getItem("token");
+    const package_id = this.state.realId;
+    const resp1 = axios.post(
+      api_link.API_LINK + "notice/user-packages",
+      { package_id: package_id },
+      { headers: { Authorization: token } }
+    );
+    console.log(resp1);
+    toast.dark("Package Requested", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    setTimeout(() => {
+      window.location.reload();
+    }, 3000);
+  };
+  render() {
+    return (
+      <React.Fragment>
+        {this.state.show === true ? (
+          <React.Fragment>
+            <ToastContainer
+              position="top-center"
+              autoClose={5000}
+              hideProgressBar={true}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+            />
+            <div class="" style={{ height: "100vh" }}>
+              <div class="container" style={{ paddingTop: "0px" }}>
+                <div class="panel pricing-table">
+                  <div class="pricing-plan">
+                    <img
+                      src="https://s22.postimg.cc/8mv5gn7w1/paper-plane.png"
+                      alt=""
+                      class="pricing-img"
+                    />
+                    <h2 class="pricing-header">Basic</h2>
+                    <ul class="pricing-features">
+                      <li class="pricing-features-item">
+                        Ad Duration :{" "}
+                        {this.state.basic && this.state.basic.duration}
+                      </li>
+                      <li class="pricing-features-item">
+                        Ad Clicks :{" "}
+                        {this.state.basic && this.state.basic.clicks}
+                      </li>
+                      <li class="pricing-features-item">
+                        Ad Views : {this.state.basic && this.state.basic.views}
+                      </li>
+                      <li class="pricing-features-item">
+                        Ads Per Package :{" "}
+                        {this.state.basic && this.state.basic.ads_per_package}
+                      </li>
+                      <li class="pricing-features-item">
+                        {this.state.basic && this.state.basic.description}
+                      </li>
+                    </ul>
+                    <span class="pricing-price">
+                      SR {this.state.basic && this.state.basic.amount}
+                    </span>
+                    {this.props.package_id === 1 ? (
+                      <img
+                        src="https://img.icons8.com/color/48/000000/checkmark.png"
+                        alt="checkmark"
+                      />
+                    ) : (
+                      <Link
+                        class="pricing-button"
+                        onClick={() => {
+                          this.props.selectPackage(1);
+                          this.setState({ realId: this.state.packages[0]._id });
+                        }}
+                        disabled={this.props.accounts < 1}
+                        data-toggle="modal"
+                        data-target="#packageConfirmation"
+                      >
+                        Select
+                      </Link>
+                    )}
+                  </div>
+
+                  <div class="pricing-plan">
+                    <img
+                      src="https://s28.postimg.cc/ju5bnc3x9/plane.png"
+                      alt=""
+                      class="pricing-img"
+                    />
+                    <h2 class="pricing-header">Standard</h2>
+                    <ul class="pricing-features">
+                      <li class="pricing-features-item">
+                        Ad Duration :{" "}
+                        {this.state.standard && this.state.standard.duration}
+                      </li>
+                      <li class="pricing-features-item">
+                        Ad Clicks :{" "}
+                        {this.state.standard && this.state.standard.clicks}
+                      </li>
+                      <li class="pricing-features-item">
+                        Ad Views :{" "}
+                        {this.state.standard && this.state.standard.views}
+                      </li>
+                      <li class="pricing-features-item">
+                        Ads Per Package :{" "}
+                        {this.state.standard &&
+                          this.state.standard.ads_per_package}
+                      </li>
+                      <li class="pricing-features-item">
+                        {this.state.standard && this.state.standard.description}
+                      </li>
+                    </ul>
+                    <span class="pricing-price">
+                      SR {this.state.standard && this.state.standard.amount}
+                    </span>
+                    {this.props.package_id === 2 ? (
+                      <img
+                        src="https://img.icons8.com/color/48/000000/checkmark.png"
+                        alt="check"
+                      />
+                    ) : (
+                      <Link
+                        to="#"
+                        class="pricing-button"
+                        onClick={() => {
+                          this.props.selectPackage(2);
+                          this.setState({ realId: this.state.packages[1]._id });
+                        }}
+                        disabled={this.props.accounts < 1}
+                        data-toggle="modal"
+                        data-target="#packageConfirmation"
+                      >
+                        Select
+                      </Link>
+                    )}
+                  </div>
+
+                  <div class="pricing-plan">
+                    <img
+                      src="https://s21.postimg.cc/tpm0cge4n/space-ship.png"
+                      alt=""
+                      class="pricing-img"
+                    />
+                    <h2 class="pricing-header">Premium</h2>
+                    <ul class="pricing-features">
+                      <li class="pricing-features-item">
+                        Ad Duration :{" "}
+                        {this.state.premium && this.state.premium.duration}
+                      </li>
+                      <li class="pricing-features-item">
+                        Ad Clicks :{" "}
+                        {this.state.premium && this.state.premium.clicks}
+                      </li>
+                      <li class="pricing-features-item">
+                        Ad Views :{" "}
+                        {this.state.premium && this.state.premium.views}
+                      </li>
+                      <li class="pricing-features-item">
+                        Ads Per Package :{" "}
+                        {this.state.premium &&
+                          this.state.premium.ads_per_package}
+                      </li>
+                      <li class="pricing-features-item">
+                        {this.state.premium && this.state.premium.description}
+                      </li>
+                    </ul>
+                    <span class="pricing-price">
+                      SR {this.state.premium && this.state.premium.amount}
+                    </span>
+                    {this.props.package_id === 3 ? (
+                      <img
+                        src="https://img.icons8.com/color/48/000000/checkmark.png"
+                        alt="check"
+                      />
+                    ) : (
+                      <Link
+                        to="#"
+                        class="pricing-button"
+                        onClick={() => {
+                          this.props.selectPackage(3);
+                          this.setState({ realId: this.state.packages[2]._id });
+                        }}
+                        disabled={this.props.accounts < 1}
+                        data-toggle="modal"
+                        data-target="#packageConfirmation"
+                      >
+                        Select
+                      </Link>
+                    )}
+                  </div>
+                </div>
+                {/* <div className="row mt-3">
+                  {this.props.package_id ? (
+                    <React.Fragment>
+                      <div className="col-md-10"></div>
+                      <div className="col-md-2">
+                        <button
+                          className="btn btn-lg btn-block btn-secondary"
+                          onClick={this.props.changePage}
+                        >
+                          Next
+                        </button>
+                      </div>
+                    </React.Fragment>
+                  ) : null}
+                </div> */}
+              </div>
+            </div>
+          </React.Fragment>
+        ) : null}
+        <div
+          class="modal fade"
+          id="packageConfirmation"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalCenterTitle"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">
+                  Package Select Confirmation
+                </h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                  onClick={() => this.props.selectPackage(null)}
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" style={{ fontSize: "2vh" }}>
+                You have Selected{" "}
+                <b>
+                  {this.props.package_id === 1
+                    ? "Basic"
+                    : this.props.package_id === 2
+                    ? "Standard"
+                    : "Premium"}
+                </b>{" "}
+                Package, after confirmation your request for this selection will
+                be forwarded to the Admin.
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  style={{ background: "red", color: "white" }}
+                  className="btn btn-md"
+                  data-dismiss="modal"
+                  onClick={() => this.props.selectPackage(null)}
+                >
+                  Cancel Selection
+                </button>
+
+                <button
+                  type="button"
+                  data-dismiss="modal"
+                  class="btn btn-success"
+                  style={{ background: "#8dbf42", color: "white" }}
+                  onClick={() => this.assignPackage()}
+                >
+                  Confirm Selection
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </React.Fragment>
+    );
+  }
+}
+
+export default PricingPlans;

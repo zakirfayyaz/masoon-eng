@@ -1,0 +1,12 @@
+.example {
+  overflow-y: scroll;
+}
+
+.example::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE and Edge */
+.example {
+  -ms-overflow-style: none;
+}
